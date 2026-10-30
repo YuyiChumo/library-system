@@ -1,17 +1,14 @@
 package com.example.demo;
 
 public class BorrowRequest {
-    private String username;
-    private String password;
-    private String bookName;
-    private String action; // "borrow" 或 "return"
+    private User user;      // 谁在操作：至少要有 username 和 password
+    private Book book;      // 借/还哪本书：传 id 或 name 都行
+    private String action;  // "borrow" 或 "return"
 
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
-    public String getBookName() { return bookName; }
+    public User getUser() { return user; }
+    public Book getBook() { return book; }
     public String getAction() { return action; }
-    public void setUsername(String username) { this.username = username; }
-    public void setPassword(String password) { this.password = password; }
-    public void setBookName(String bookName) { this.bookName = bookName; }
+    public void setUser(User user) { this.user = user; }
+    public void setBook(Book book) { this.book = book; }
     public void setAction(String action) { this.action = action; }
 }

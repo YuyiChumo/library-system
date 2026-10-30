@@ -263,9 +263,13 @@ POST {{baseUrl}}/borrow
 Content-Type: application/json
 
 {
-  "username": "xiaoming",
-  "password": "123456",
-  "bookName": "算法导论",
+  "user": {
+    "username": "xiaoming",
+    "password": "123456"
+  },
+  "book": {
+    "name": "算法导论"
+  },
   "action": "borrow"
 }
 
@@ -277,9 +281,13 @@ POST {{baseUrl}}/borrow
 Content-Type: application/json
 
 {
-  "username": "xiaoming",
-  "password": "123456",
-  "bookName": "算法导论",
+  "user": {
+    "username": "xiaoming",
+    "password": "123456"
+  },
+  "book": {
+    "name": "算法导论"
+  },
   "action": "return"
 }
 
