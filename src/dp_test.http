@@ -1,0 +1,243 @@
+# 用法：启动 Demo1Application 后，按顺序从上往下点 ▶ 执行（也可以点顶部的 Run All）
+# 注意：数据库是 H2 内存库，应用每次重启数据都会清空，所以每次都要先跑“注册”
+# 注意：除了“添加书籍”，别的接口都不需要管理员
+
+@baseUrl = http://localhost:8080
+
+### 1. 注册普通用户 xiaoming（isAdmin = false）
+POST {{baseUrl}}/users/signUp
+Content-Type: application/json
+
+{
+  "user": {
+    "name": "小明",
+    "username": "xiaoming",
+    "password": "123456",
+    "isAdmin": false
+  }
+}
+
+### 2. 注册管理员 admin（isAdmin = true）—— 添加书籍必须用它
+POST {{baseUrl}}/users/signUp
+Content-Type: application/json
+
+{
+  "user": {
+    "name": "管理员",
+    "username": "admin",
+    "password": "123456",
+    "isAdmin": true
+  }
+}
+
+### 3. 测试登录（普通用户）
+POST {{baseUrl}}/users/signIn
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "xiaoming",
+    "password": "123456"
+  }
+}
+
+### 4. 添加书籍 —— 用管理员，应该成功（code = 200）
+# 注意：这里故意不传 id，id 由数据库自动生成
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "C++Design",
+    "author": "xiaoming",
+    "stock": 1,
+    "price": 100.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 5. 再添加一本同名的书 —— 应该失败（《C++Design》已经存在了）
+# 需要先成功执行第 4 个请求
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "C++Design",
+    "author": "别人",
+    "stock": 5,
+    "price": 88.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 6. 换本新书再添加 —— 应该成功（确认不是只有第一本能加）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "深入理解JVM",
+    "author": "周志明",
+    "stock": 10,
+    "price": 79.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 7. 普通用户加书 —— 应该失败（不是管理员，无权操作）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "普通用户加的书",
+    "author": "小明",
+    "stock": 1,
+    "price": 10.00
+  },
+  "user": {
+    "username": "xiaoming",
+    "password": "123456"
+  }
+}
+
+### 8. 密码故意填错 —— 应该失败（密码错误）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "密码错的书",
+    "author": "谁",
+    "stock": 1,
+    "price": 10.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "错的密码"
+  }
+}
+
+### 9. 用户不存在 —— 应该失败（用户不存在）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "幽灵加的书",
+    "author": "谁",
+    "stock": 1,
+    "price": 10.00
+  },
+  "user": {
+    "username": "ghost",
+    "password": "123456"
+  }
+}
+
+### 10. 库存填负数 —— 应该失败（库存不能为空，也不能是负数）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "库存负数的书",
+    "author": "谁",
+    "stock": -1,
+    "price": 10.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 11. 价格填 0 —— 应该失败（价格必须大于 0）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "价格为零的书",
+    "author": "谁",
+    "stock": 1,
+    "price": 0
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 12. 书名是空字符串 —— 应该失败（书名不能为空）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "   ",
+    "author": "谁",
+    "stock": 1,
+    "price": 10.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 13. 前端自己传 id —— 应该成功，但 id 会被忽略，不会覆盖已有的书
+# 验证方法：执行完后可以用 H2 控制台查 select * from books，id 是新生成的，不是 1
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "id": 1,
+    "name": "id被忽略的书",
+    "author": "谁",
+    "stock": 3,
+    "price": 20.00
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 14. 查询所有图书 —— 应该成功，返回前面加进去的那几本
+# 想看到"当前还没有图书"，就重启应用（内存库清空）后只跑这一个请求
+GET {{baseUrl}}/books/all
+
+### 15. 按 id 查书 —— 应该成功（id = 1 是第 4 步加的 C++Design）
+GET {{baseUrl}}/books/1
+
+### 16. 查一个不存在的 id —— 应该失败（书籍不存在）
+GET {{baseUrl}}/books/999
+
+### 17. 请求里没带密码 —— 应该失败（账号或密码不能为空）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "没带密码的书",
+    "author": "谁",
+    "stock": 1,
+    "price": 10.00
+  },
+  "user": {
+    "username": "admin"
+  }
+}
+
