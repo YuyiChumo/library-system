@@ -258,7 +258,10 @@ Content-Type: application/json
   }
 }
 
-### 19. 普通用户借书
+### 19. 借书前查一下书库？
+GET {{baseUrl}}/books/all
+
+### 20. 普通用户借书
 POST {{baseUrl}}/borrow
 Content-Type: application/json
 
@@ -273,10 +276,10 @@ Content-Type: application/json
   "action": "borrow"
 }
 
-### 20. 查一下书库，库存是不是少了 1？
+### 21. 查一下书库，库存是不是少了 1？
 GET {{baseUrl}}/books/all
 
-### 21. 普通用户还书
+### 22. 普通用户还书
 POST {{baseUrl}}/borrow
 Content-Type: application/json
 
@@ -291,5 +294,5 @@ Content-Type: application/json
   "action": "return"
 }
 
-### 22. 再查书库，库存是不是回来了？
+### 23. 再查书库，库存是不是回来了？
 GET {{baseUrl}}/books/all
