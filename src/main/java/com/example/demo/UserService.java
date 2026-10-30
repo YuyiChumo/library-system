@@ -8,12 +8,22 @@ public class UserService {
 
     public UserService(UserRepository UserRepository) { this.userRepository = UserRepository; }
 
-    // 密码是否匹配：以后要给密码加密，只需要改这一个方法
-    boolean isPasswordCorrect(User dbUser, String rawPassword) {
-        return dbUser != null && rawPassword != null && dbUser.getPassword().equals(rawPassword);
+    public User checkUser(String username, String rawPassword) {
+        if (username == null || rawPassword == null) return null;
+        User dbUser = userRepository.findByUsername(username);
+        if (dbUser == null || !isPasswordCorrect(dbUser, rawPassword)) return null;
+        return dbUser;
     }
 
-    boolean isUsernameEqualsToPassword(User user) {
+    boolean isPasswordCorrect(User dbUser, String rawPassword) {
+        return dbUser != null && dbUser.getPassword().equals(rawPassword);
+    }
+
+    boolean isPasswordCorrect(String username, String password) {
+        return username != null && userRepository.findByUsername(username).getPassword().equals(password);
+    }
+
+    boolean isPasswordCorrect(User user) {
         if (user == null || user.getUsername() == null) {
             return false;
         }
@@ -51,7 +61,7 @@ public class UserService {
         }
 
         // 2. 身份验证
-        if (!isUsernameEqualsToPassword(user)) {
+        if (!isPasswordCorrect(user)) {
             return Result.fail("密码错误，无权修改", false);
         }
 
@@ -75,7 +85,7 @@ public class UserService {
         }
 
         // 2. 身份验证
-        if (!isUsernameEqualsToPassword(user)) {
+        if (!isPasswordCorrect(user)) {
             return Result.fail("密码错误，无权修改", false);
         }
 

@@ -241,3 +241,47 @@ Content-Type: application/json
   }
 }
 
+### 18. 管理员加书（确保库里有书）
+POST {{baseUrl}}/books/add
+Content-Type: application/json
+
+{
+  "book": {
+    "name": "算法导论",
+    "author": "Thomas H. Cormen",
+    "stock": 5,
+    "price": 128.50
+  },
+  "user": {
+    "username": "admin",
+    "password": "123456"
+  }
+}
+
+### 19. 普通用户借书
+POST {{baseUrl}}/borrow
+Content-Type: application/json
+
+{
+  "username": "xiaoming",
+  "password": "123456",
+  "bookName": "算法导论",
+  "action": "borrow"
+}
+
+### 20. 查一下书库，库存是不是少了 1？
+GET {{baseUrl}}/books/all
+
+### 21. 普通用户还书
+POST {{baseUrl}}/borrow
+Content-Type: application/json
+
+{
+  "username": "xiaoming",
+  "password": "123456",
+  "bookName": "算法导论",
+  "action": "return"
+}
+
+### 22. 再查书库，库存是不是回来了？
+GET {{baseUrl}}/books/all
