@@ -1,4 +1,7 @@
-package com.example.demo;
+package com.example.demo.dto;
+
+import com.example.demo.entity.Book;
+import com.example.demo.entity.User;
 
 public class BorrowRequest {
     private User user;      // 谁在操作：至少要有 username 和 password

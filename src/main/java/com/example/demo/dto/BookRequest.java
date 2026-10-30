@@ -1,4 +1,7 @@
-package com.example.demo;
+package com.example.demo.dto;
+
+import com.example.demo.entity.Book;
+import com.example.demo.entity.User;
 
 public class BookRequest {
     private Book book;

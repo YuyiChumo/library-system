@@ -1,5 +1,8 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.dto.BorrowRequest;
+import com.example.demo.service.BorrowService;
+import com.example.demo.common.Result;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

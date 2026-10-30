@@ -1,5 +1,10 @@
-package com.example.demo;
+package com.example.demo.service;
 
+import com.example.demo.dto.BookRequest;
+import com.example.demo.entity.Book;
+import com.example.demo.common.Result;
+import com.example.demo.entity.User;
+import com.example.demo.repository.BookRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 

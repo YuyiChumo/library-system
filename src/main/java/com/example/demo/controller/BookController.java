@@ -1,5 +1,9 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.entity.Book;
+import com.example.demo.dto.BookRequest;
+import com.example.demo.service.BookService;
+import com.example.demo.common.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
